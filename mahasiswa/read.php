@@ -1,32 +1,47 @@
 <?php
 include '../db.php';
 
-// Check if specific ID is requested
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-    $sql = "SELECT * FROM tb_mahasiswa WHERE id = $id";
-    $result = $conn->query($sql);
+header('Content-Type: application/json');
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $data = [$row]; // Return as array to maintain compatibility
+$data = [];
+
+if (isset($_GET['nim']) || isset($_GET['id'])) {
+
+    if (isset($_GET['nim'])) {
+        $nim = $_GET['nim'];
+        $stmt = $conn->prepare("SELECT * FROM tb_mahasiswa WHERE nim = ?");
+        $stmt->bind_param("s", $nim);
     } else {
-        $data = [];
+        $id = $_GET['id'];
+        $stmt = $conn->prepare("SELECT * FROM tb_mahasiswa WHERE id = ?");
+        $stmt->bind_param("i", $id);
     }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    $stmt->close();
+
 } else {
-    // Get all records
+
+    // Ambil semua data
     $sql = "SELECT * FROM tb_mahasiswa";
     $result = $conn->query($sql);
 
-    $data = array();
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $data[] = $row;
-        }
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
     }
 }
 
-echo json_encode($data);
+echo json_encode([
+    "status"  => "success",
+    "message" => count($data) > 0 ? "Data ditemukan" : "Data kosong",
+    "data"    => $data
+]);
 
 $conn->close();
 ?>

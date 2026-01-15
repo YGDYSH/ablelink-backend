@@ -1,18 +1,39 @@
 <?php
-include '../db.php';
+include_once '../db.php';
 
-$nim = $_POST['nim'];
-$nama = $_POST['nama'];
-$alamat = $_POST['alamat'];
+header('Content-Type: application/json');
+
+$nim     = $_POST['nim'];
+$nama    = $_POST['nama'];
+$alamat  = $_POST['alamat'];
 $no_telp = $_POST['no_telp'];
 
-$stmt = $conn->prepare("INSERT INTO tb_mahasiswa (nim, nama, alamat, no_telp) VALUES (?, ?, ?, ?)");
+$stmt = $conn->prepare("
+    INSERT INTO tb_mahasiswa (nim, nama, alamat, no_telp)
+    VALUES (?, ?, ?, ?)
+");
 $stmt->bind_param("ssss", $nim, $nama, $alamat, $no_telp);
 
-if ($stmt->execute() === TRUE) {
-    echo "New record created successfully";
+if ($stmt->execute()) {
+
+    echo json_encode([
+        "status"  => "success",
+        "message" => "Data berhasil ditambahkan",
+        "data"    => [
+            "nim"     => $nim,
+            "nama"    => $nama,
+            "alamat"  => $alamat,
+            "no_telp" => $no_telp
+        ]
+    ]);
+
 } else {
-    echo "Error: " . $stmt->error;
+
+    echo json_encode([
+        "status"  => "error",
+        "message" => $stmt->error
+    ]);
+
 }
 
 $stmt->close();

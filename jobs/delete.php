@@ -10,7 +10,7 @@ $id = $_POST['id'];
 
 // Mempersiapkan statement SQL untuk menghapus data
 // Gunakan prepared statement untuk mencegah SQL injection
-$stmt = $conn->prepare("DELETE FROM tb_mahasiswa WHERE id = ?");
+$stmt = $conn->prepare("DELETE FROM jobs WHERE id = ?");
 
 // Mengikat parameter ke statement SQL
 // "i" artinya integer

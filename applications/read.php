@@ -10,19 +10,19 @@ $data = [];
 
 // Cek apakah ada parameter GET 'nim' atau 'id'
 // Jika ada, maka hanya ambil data spesifik berdasarkan parameter tersebut
-if (isset($_GET['nim']) || isset($_GET['id'])) {
+if (isset($_GET['status']) || isset($_GET['id'])) {
 
     // Jika parameter 'nim' disediakan, cari berdasarkan nim
-    if (isset($_GET['nim'])) {
-        $nim = $_GET['nim'];
+    if (isset($_GET['status'])) {
+        $nim = $_GET['status'];
         // Mempersiapkan statement SQL untuk mencari data berdasarkan nim
-        $stmt = $conn->prepare("SELECT * FROM tb_mahasiswa WHERE nim = ?");
-        $stmt->bind_param("s", $nim);  // "s" artinya string
+        $stmt = $conn->prepare("SELECT * FROM applications WHERE status  = ?");
+        $stmt->bind_param("s", $status);  // "s" artinya string
     } else {
         // Jika parameter 'id' disediakan, cari berdasarkan id
         $id = $_GET['id'];
         // Mempersiapkan statement SQL untuk mencari data berdasarkan id
-        $stmt = $conn->prepare("SELECT * FROM tb_mahasiswa WHERE id = ?");
+        $stmt = $conn->prepare("SELECT * FROM applications WHERE id = ?");
         $stmt->bind_param("i", $id);  // "i" artinya integer
     }
 
@@ -41,7 +41,7 @@ if (isset($_GET['nim']) || isset($_GET['id'])) {
 
 } else {
     // Jika tidak ada parameter GET, ambil semua data dari tabel
-    $sql = "SELECT * FROM tb_mahasiswa";
+    $sql = "SELECT * FROM applications";
     $result = $conn->query($sql);
 
     // Loop melalui semua hasil dan tambahkan ke array data

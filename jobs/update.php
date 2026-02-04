@@ -7,22 +7,22 @@ header('Content-Type: application/json');
 
 // Mengambil data dari form POST
 $id      = $_POST['id'];       // ID untuk mengetahui record mana yang akan diupdate
-$nim     = $_POST['nim'];      // Nomor Induk Mahasiswa
-$nama    = $_POST['nama'];     // Nama mahasiswa
-$alamat  = $_POST['alamat'];   // Alamat mahasiswa
-$no_telp = $_POST['no_telp'];  // Nomor telepon mahasiswa
+$user_id     = $_POST['user_id'];      // Nomor Induk Mahasiswa
+$judul    = $_POST['judul'];     // Nama mahasiswa
+$perusahaan   = $_POST['perusahaan'];   // Alamat mahasiswa
+$lokasi    = $_POST['lokasi'];  // Nomor telepon mahasiswa
 
 // Mempersiapkan statement SQL untuk mengupdate data
 // Gunakan prepared statement untuk mencegah SQL injection
 $stmt = $conn->prepare("
-    UPDATE tb_mahasiswa
-    SET nim = ?, nama = ?, alamat = ?, no_telp = ?
+    UPDATE jobs
+    SET user_id = ?, judul = ?, perusahaan = ?, lokasi = ?
     WHERE id = ?
 ");
 
 // Mengikat parameter ke statement SQL
 // "ssssi" artinya: string, string, string, string, integer
-$stmt->bind_param("ssssi", $nim, $nama, $alamat, $no_telp, $id);
+$stmt->bind_param("isssi", $user_id, $judul, $perusahaan, $lokasi, $id);
 
 // Eksekusi statement
 if ($stmt->execute()) {
@@ -31,11 +31,12 @@ if ($stmt->execute()) {
         "status"  => "success",
         "message" => "Data berhasil diperbarui",
         "data"    => [
-            "id"      => $id,
-            "nim"     => $nim,
-            "nama"    => $nama,
-            "alamat"  => $alamat,
-            "no_telp" => $no_telp
+           "id"         => $id,
+            "judul"      => $judul,
+            "perusahaan" => $perusahaan,
+            "lokasi"     => $lokasi,
+            "user_id"    => $user_id
+
         ]
     ]);
 

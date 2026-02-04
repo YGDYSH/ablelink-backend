@@ -13,16 +13,16 @@ $data = [];
 if (isset($_GET['status']) || isset($_GET['id'])) {
 
     // Jika parameter 'nim' disediakan, cari berdasarkan nim
-    if (isset($_GET['status'])) {
-        $nim = $_GET['status'];
+    if (isset($_GET['alamat'])) {
+        $nim = $_GET['alamat'];
         // Mempersiapkan statement SQL untuk mencari data berdasarkan nim
-        $stmt = $conn->prepare("SELECT * FROM applications WHERE status  = ?");
+        $stmt = $conn->prepare("SELECT * FROM profiles WHERE status  = ?");
         $stmt->bind_param("s", $status);  // "s" artinya string
     } else {
         // Jika parameter 'id' disediakan, cari berdasarkan id
         $id = $_GET['id'];
         // Mempersiapkan statement SQL untuk mencari data berdasarkan id
-        $stmt = $conn->prepare("SELECT * FROM applications WHERE id = ?");
+        $stmt = $conn->prepare("SELECT * FROM profiles WHERE id = ?");
         $stmt->bind_param("i", $id);  // "i" artinya integer
     }
 
@@ -41,7 +41,7 @@ if (isset($_GET['status']) || isset($_GET['id'])) {
 
 } else {
     // Jika tidak ada parameter GET, ambil semua data dari tabel
-    $sql = "SELECT * FROM applications";
+    $sql = "SELECT * FROM profiles";
     $result = $conn->query($sql);
 
     // Loop melalui semua hasil dan tambahkan ke array data

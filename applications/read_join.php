@@ -5,17 +5,23 @@ header('Content-Type: application/json; charset=utf-8');
 // Panggil koneksi database
 require_once '../db.php';
 
-// Query JOIN users dan jobs
+// Query JOIN applications, users, dan jobs
 $sql = "
     SELECT
+        applications.id,
+        applications.user_id,
+        applications.job_id,
+        applications.status,
         users.nama,
         users.email,
         jobs.judul,
         jobs.perusahaan,
         jobs.lokasi
-    FROM users
+    FROM applications
+    INNER JOIN users
+        ON applications.user_id = users.id
     INNER JOIN jobs
-        ON users.id = jobs.user_id
+        ON applications.job_id = jobs.id
 ";
 
 // Eksekusi query
@@ -36,7 +42,6 @@ if ($result && $result->num_rows > 0) {
     ], JSON_PRETTY_PRINT);
 
 } else {
-    // Jika data kosong
     echo json_encode([
         "status" => "success",
         "total_data" => 0,
@@ -46,3 +51,4 @@ if ($result && $result->num_rows > 0) {
 
 // Tutup koneksi
 $conn->close();
+?>

@@ -2,30 +2,28 @@
 include_once '../db.php';
 header('Content-Type: application/json');
 
-$user_id    = $_POST['user_id'];
-$judul      = $_POST['judul'];
-$perusahaan = $_POST['perusahaan'];
-$lokasi     = $_POST['lokasi'];
+$user_id = $_POST['user_id'];
+$job_id  = $_POST['job_id'];
+$status  = $_POST['status'];
 
 $stmt = $conn->prepare("
-    INSERT INTO jobs (user_id, judul, perusahaan, lokasi)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO applications (user_id, job_id, status)
+    VALUES (?, ?, ?)
 ");
 
-$stmt->bind_param("isss", $user_id, $judul, $perusahaan, $lokasi);
+$stmt->bind_param("iis", $user_id, $job_id, $status);
 
 if ($stmt->execute()) {
     $last_id = $stmt->insert_id;
 
     echo json_encode([
         "status"  => "success",
-        "message" => "Data jobs berhasil ditambahkan",
+        "message" => "Data applications berhasil ditambahkan",
         "data"    => [
-            "id"         => $last_id,
-            "user_id"    => $user_id,
-            "judul"      => $judul,
-            "perusahaan" => $perusahaan,
-            "lokasi"     => $lokasi
+            "id"      => $last_id,
+            "user_id" => $user_id,
+            "job_id"  => $job_id,
+            "status"  => $status
         ]
     ]);
 } else {
@@ -37,3 +35,4 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
+?>

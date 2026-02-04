@@ -6,36 +6,37 @@ include '../db.php';
 header('Content-Type: application/json');
 
 // Ambil data dari POST
-$id      = $_POST['id'];       // ID application yang akan diupdate
-$user_id = $_POST['user_id'];  // ID user
-$job_id  = $_POST['job_id'];   // ID job
-$status  = $_POST['status'];   // Status lamaran
+$id                = $_POST['id'];        // ID profile yang akan diupdate
+$user_id           = $_POST['user_id'];   // ID user
+$alamat             = $_POST['alamat'];    // Alamat
+$no_hp              = $_POST['no_hp'];     // Nomor HP
+$jenis_disabilitas  = $_POST['jenis_disabilitas']; // Jenis disabilitas
 
 // Prepare statement UPDATE
 $stmt = $conn->prepare("
-    UPDATE applications
-    SET user_id = ?, job_id = ?, status = ?
+    UPDATE profiles
+    SET user_id = ?, alamat = ?, no_hp = ?, jenis_disabilitas = ?
     WHERE id = ?
 ");
 
 // Bind parameter
-// i = integer, s = string
-$stmt->bind_param("iisi", $user_id, $job_id, $status, $id);
+$stmt->bind_param("isssi", $user_id, $alamat, $no_hp, $jenis_disabilitas, $id);
 
 // Eksekusi
 if ($stmt->execute()) {
     echo json_encode([
         "status"  => "success",
-        "message" => "Data application berhasil diperbarui",
+        "message" => "Data profiles berhasil diperbarui",
         "data"    => [
-            "id"      => $id,
-            "user_id" => $user_id,
-            "job_id"  => $job_id,
-            "status"  => $status
+            "id"                => $id,
+            "user_id"           => $user_id,
+            "alamat"            => $alamat,
+            "no_hp"             => $no_hp,
+            "jenis_disabilitas" => $jenis_disabilitas
         ]
     ]);
 } else {
-echo json_encode([
+    echo json_encode([
         "status"  => "error",
         "message" => $stmt->error
     ]);

@@ -2,30 +2,30 @@
 include_once '../db.php';
 header('Content-Type: application/json');
 
-$user_id    = $_POST['user_id'];
-$judul      = $_POST['judul'];
-$perusahaan = $_POST['perusahaan'];
-$lokasi     = $_POST['lokasi'];
+$user_id          = $_POST['user_id'];
+$alamat           = $_POST['alamat'];
+$no_hp            = $_POST['no_hp'];
+$jenis_disabilitas = $_POST['jenis_disabilitas'];
 
 $stmt = $conn->prepare("
-    INSERT INTO jobs (user_id, judul, perusahaan, lokasi)
+    INSERT INTO profiles (user_id, alamat, no_hp, jenis_disabilitas)
     VALUES (?, ?, ?, ?)
 ");
 
-$stmt->bind_param("isss", $user_id, $judul, $perusahaan, $lokasi);
+$stmt->bind_param("isss", $user_id, $alamat, $no_hp, $jenis_disabilitas);
 
 if ($stmt->execute()) {
     $last_id = $stmt->insert_id;
 
     echo json_encode([
         "status"  => "success",
-        "message" => "Data jobs berhasil ditambahkan",
+        "message" => "Data profiles berhasil ditambahkan",
         "data"    => [
-            "id"         => $last_id,
-            "user_id"    => $user_id,
-            "judul"      => $judul,
-            "perusahaan" => $perusahaan,
-            "lokasi"     => $lokasi
+            "id"                => $last_id,
+            "user_id"           => $user_id,
+            "alamat"            => $alamat,
+            "no_hp"             => $no_hp,
+            "jenis_disabilitas" => $jenis_disabilitas
         ]
     ]);
 } else {
@@ -37,3 +37,4 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
+?>
